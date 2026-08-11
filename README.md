@@ -35,3 +35,7 @@ RAM >= 85%
 
 RAM <= 80%
     warning state resets
+
+## License
+
+MemWatch is licensed under the MIT License. See `LICENSE` for details.
