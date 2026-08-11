@@ -2,41 +2,37 @@
 
 MemWatch is a lightweight Linux memory monitor written in Bash.
 
-It watches system RAM usage, sends a desktop notification when memory crosses a configured threshold, and opens an interactive process picker so the user can review and close memory-heavy applications.
+It continuously watches system RAM usage, sends a desktop notification when memory crosses a configurable threshold, and opens an interactive process picker so the user can review and close memory-heavy applications.
 
-The project is designed to stay simple, transparent, and beginner-friendly while still behaving like a real desktop utility.
+The goal is to provide a simple, transparent, and user-controlled alternative to automatic OOM killers.
 
 ## Features
 
-- Monitors RAM usage continuously
+- Continuous RAM monitoring
 - Uses `MemAvailable` from `/proc/meminfo`
 - Configurable warning and reset thresholds
 - Hysteresis to prevent repeated alerts near the threshold
 - Desktop notifications through `notify-send`
 - Interactive process picker using Zenity
 - Groups processes by application name
-- Shows combined application RAM usage
-- Graceful shutdown using `SIGTERM`
+- Shows combined RAM usage per application
+- Graceful application shutdown using `SIGTERM`
 - Optional force-close using `SIGKILL`
 - Verifies whether processes actually terminated
 - Lightweight Bash implementation
+- No background framework or heavy runtime required
 
-## Current behavior
+## How it works
 
-By default, MemWatch checks memory every 5 seconds.
+By default, MemWatch checks memory usage every 5 seconds.
 
 ```text
 RAM < 80%
-    normal state
+    Normal state
 
 RAM >= 85%
-    desktop warning
-    process picker opens
+    Desktop warning
+    Process picker opens
 
 RAM <= 80%
-    warning state resets
-```
-
-## License
-
-MemWatch is licensed under the MIT License. See `LICENSE` for details.
+    Warning state resets
