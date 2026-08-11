@@ -152,7 +152,7 @@ sudo apt install procps libnotify-bin zenity
 Clone the repository:
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/RayenBHK/MemWatch
 cd MemWatch
 ```
 
