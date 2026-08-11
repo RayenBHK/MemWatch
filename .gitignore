@@ -1,0 +1,13 @@
+# Editor / IDE files
+.vscode/
+.idea/
+.github/
+
+# Temporary files
+*.tmp
+*.log
+*~
+
+# OS junk
+.DS_Store
+Thumbs.db
