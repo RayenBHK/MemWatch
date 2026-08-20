@@ -1,0 +1,12 @@
+[Unit]
+Description=MemWatch Linux Memory Monitor
+After=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=%h/Projects/Personal/MemWatch/memwatch.sh
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

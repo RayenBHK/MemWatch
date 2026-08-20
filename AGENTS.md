@@ -1,15 +1,28 @@
 # AGENTS.md
 
-Two standalone Bash scripts. No build system, no tests, no lint config, no package manager, not a git repo. Shellcheck is not installed — syntax-check with `bash -n file.sh`.
+MemWatch is a Git-tracked Bash project. It has no build system, package manager,
+or external test framework. ShellCheck is not installed — syntax-check scripts
+with `bash -n file.sh` and run the repository test runner with
+`bash tests/memwatch_test.sh`.
 
 ## Scripts
 
-- `memwatch.sh` — infinite RAM-monitor loop (only exits via signal; never run without a timeout). Reads `/proc/meminfo` directly (awk), not `free`. Tunables are plain constants at the top: `WARNING_THRESHOLD=70`, `RESET_THRESHOLD=65`, `CHECK_INTERVAL=5`. Hysteresis: warns once at ≥70%, re-arms only below ≤65%. Alerting uses `notify-send`, so it requires a running desktop notification daemon — it fails silently headless.
-- `process-test.sh` — interactive prototype: lists top-10 processes by RSS via `ps -eo pid=,%mem=,comm= --sort=-rss`, lets the user pick one in a `zenity` dialog (GUI required; `zenity` must be installed), then prints `Selected PID: <pid>`.
+- `memwatch.sh` — infinite RAM and swap monitor (only exits via signal; never run without a timeout). Reads `/proc/meminfo` directly with `awk`, uses hysteresis, logs through standard output/journald, and can open desktop notifications and Zenity dialogs.
+- `tests/memwatch_test.sh` — non-destructive Bash test runner for calculations, pressure logic, formatting, logging, process identity, grouping, and PID lookup. It does not restart the service or close applications.
+- `systemd/memwatch.service` — tracked user-service template for the repository checkout; `install.sh` renders the installed user-local path.
+- `config/memwatch.config.example` — tracked example containing every current configuration setting.
+- `install.sh` — installs the monitor, service unit, and config example under the user’s home directories without starting the service.
+- `uninstall.sh` — removes installed program and service files; preserves personal config unless `--purge` is supplied.
 
-Neither script takes arguments. Both use bash 5.x features (arrays, process substitution), so run with `bash script.sh`, not `sh`.
+The scripts use Bash 5.x features such as arrays and process substitution, so
+run them with Bash, not `sh`. `memwatch.sh` runs its monitor only when executed
+directly; the test runner sources it to exercise individual functions safely.
 
 ## Notes
 
 - `.github/` instruction files target GitHub Copilot + the Mermaid VS Code extension (`mermaidChart.*` commands); those tools do not exist in this OpenCode environment — ignore unless the user explicitly asks for Mermaid diagram work.
-- No README; `memwatch.sh` is the deliverable, `process-test.sh` is an experiment for adding interactive process selection.
+- `memwatch.sh` is the monitor deliverable. The tracked service and config files
+  are templates; the active user-level unit and personal configuration remain
+  installed outside the repository under `~/.config`.
+- `install.sh` and `uninstall.sh` are deployment tools. Do not run them, reload
+  systemd, or restart the service unless the user explicitly requests deployment.
